@@ -15,9 +15,22 @@ app.get("/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "public/notes.html"))
 );
 
-app.get("*", (req, res) =>
+app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "public/index.html"))
 );
+
+// setup api routes
+app.get("/api/notes", (req, res) => {
+  res.json(`${req.method} was recieved`);
+  console.info(req.rawHeaders);
+  console.info(`${req.method} request received`);
+});
+
+app.post("/api/notes", (req, res) => {
+  res.json(`${req.method} was recieved`);
+  console.info(req.rawHeaders);
+  console.info(`${req.method} request received`);
+});
 
 // set up port
 app.listen("3001", () =>
