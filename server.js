@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const noteData = require("./db/db.json");
+const fs = require("fs");
 
 const app = express();
 
@@ -21,9 +22,16 @@ app.get("/", (req, res) =>
 
 // setup api routes
 app.get("/api/notes", (req, res) => {
-  res.json(`${req.method} was recieved`);
-  console.info(req.rawHeaders);
-  console.info(`${req.method} request received`);
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(data);
+    }
+  });
+  // res.json(`${req.method} was recieved`);
+  // console.info(req.rawHeaders);
+  // console.info(`${req.method} request received`);
 });
 
 app.post("/api/notes", (req, res) => {
