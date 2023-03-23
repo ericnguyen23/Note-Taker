@@ -64,6 +64,11 @@ app.delete("/api/notes/:id", (req, res) => {
 
   res.json("Deleted");
 
+  // write the updated notes data to the db
+  fs.writeFile("./db/db.json", JSON.stringify(noteData, null, 4), (err) => {
+    err ? console.log(err) : console.log(`updated data written succesully`);
+  });
+
   // delete note from db
   fs.readFile("./db/db.json", "utf8", (err, data) => {
     if (err) {
