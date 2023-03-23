@@ -23,14 +23,14 @@ app.get("/", (req, res) =>
 
 // api get routes
 app.get("/api/notes", (req, res) => {
-  res.status(200).json(noteData);
-  fs.readFile("./db/db.json", "utf8", (err, data) => {
-    if (err) {
-      console.log(err);
-    } else {
-      return JSON.parse(data);
-    }
-  });
+  res.json(noteData);
+  // fs.readFile("./db/db.json", "utf8", (err, data) => {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     return JSON.parse(data);
+  //   }
+  // });
 });
 
 // api post route
@@ -43,6 +43,10 @@ app.post("/api/notes", (req, res) => {
     note_id: generateUniqueId(),
   };
 
+  noteData.push(newNote);
+  res.json(200);
+
+  // write to the local db
   fs.readFile("./db/db.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
@@ -55,7 +59,7 @@ app.post("/api/notes", (req, res) => {
     }
   });
 
-  res.json("Added!!");
+  // res.json("Added!!");
 });
 
 // set up port
