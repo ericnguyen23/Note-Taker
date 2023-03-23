@@ -36,6 +36,7 @@ app.post("/api/notes", (req, res) => {
     note_id: generateUniqueId(),
   };
 
+  // add note the the front end
   noteData.push(newNote);
   res.json("Added!");
 
@@ -56,12 +57,20 @@ app.post("/api/notes", (req, res) => {
 // delete route
 app.delete("/api/notes/:id", (req, res) => {
   const { note_id } = req.body;
+
+  // delete note from the front end
+  const index = noteData.findIndex((note) => note.note_id === note_id);
+  noteData.splice(index, 1);
+
+  res.json("Deleted");
+
+  // delete note from db
   fs.readFile("./db/db.json", "utf8", (err, data) => {
     if (err) {
       console.error(err);
     } else {
       const parsedData = JSON.parse(data);
-      // figure out a way to remove note containing :id paramater
+      // filter notes that don't match the :id param passed in
       const updatedNotes = parsedData.filter((note) => {
         return note.note_id != note_id;
       });
