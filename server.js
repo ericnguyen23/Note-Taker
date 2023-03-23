@@ -53,6 +53,29 @@ app.post("/api/notes", (req, res) => {
   });
 });
 
+// delete route
+app.delete("/api/notes/:id", (req, res) => {
+  const { note_id } = req.body;
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      const parsedData = JSON.parse(data);
+      // figure out a way to remove note containing :id paramater
+      const updatedNotes = parsedData.filter((note) => {
+        return note.note_id != note_id;
+      });
+      fs.writeFile(
+        "./db/db.json",
+        JSON.stringify(updatedNotes, null, 4),
+        (err) => {
+          err ? console.log(err) : console.log(`data deleted succesully`);
+        }
+      );
+    }
+  });
+});
+
 // set up port
 app.listen("3001", () =>
   console.log("listening to listening at http://localhost:3001")
