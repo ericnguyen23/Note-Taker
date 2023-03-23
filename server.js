@@ -20,7 +20,7 @@ app.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "public/index.html"))
 );
 
-// setup api routes
+// api get routes
 app.get("/api/notes", (req, res) => {
   res.status(200).json(noteData);
   fs.readFile("./db/db.json", "utf8", (err, data) => {
@@ -30,11 +30,9 @@ app.get("/api/notes", (req, res) => {
       return JSON.parse(data);
     }
   });
-  // res.json(`${req.method} was recieved`);
-  // console.info(req.rawHeaders);
-  // console.info(`${req.method} request received`);
 });
 
+// api post route
 app.post("/api/notes", (req, res) => {
   const { title, text } = req.body;
 
@@ -55,9 +53,7 @@ app.post("/api/notes", (req, res) => {
     }
   });
 
-  // res.json(`${req.method} was recieved`);
-  // console.info(req.rawHeaders);
-  // console.info(`${req.method} request received`);
+  res.json("Added!!");
 });
 
 // set up port
