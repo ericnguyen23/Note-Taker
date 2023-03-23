@@ -40,18 +40,22 @@ app.post("/api/notes", (req, res) => {
   noteData.push(newNote);
   res.json("Added!");
 
-  // write to the local db
-  fs.readFile("./db/db.json", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      const parsedData = JSON.parse(data);
-      parsedData.push(newNote);
-      fs.writeFile("./db/db.json", JSON.stringify(parsedData, null, 4), (err) =>
-        err ? console.log(err) : console.log(`data written succesully`)
-      );
-    }
-  });
+  fs.writeFile("./db/db.json", JSON.stringify(noteData, null, 4), (err) =>
+    err ? console.log(err) : console.log(`data written succesully`)
+  );
+
+  // // write to the local db
+  // fs.readFile("./db/db.json", "utf8", (err, data) => {
+  //   if (err) {
+  //     console.error(err);
+  //   } else {
+  //     const parsedData = JSON.parse(data);
+  //     parsedData.push(newNote);
+  //     fs.writeFile("./db/db.json", JSON.stringify(parsedData, null, 4), (err) =>
+  //       err ? console.log(err) : console.log(`data written succesully`)
+  //     );
+  //   }
+  // });
 });
 
 // delete route
@@ -59,37 +63,45 @@ app.delete("/api/notes/:id", (req, res) => {
   const { id } = req.body;
 
   // // delete note from the front end
-  // noteData.filter((note) => note.id != id);
+  noteData.filter((note) => note.id != id);
+  // res.json();
 
   const index = noteData.findIndex((note) => note.id === id);
   noteData.splice(index, 1);
 
-  // write the updated notes data to the db
-  fs.writeFile("./db/db.json", JSON.stringify(noteData, null, 4), (err) => {
-    err ? console.log(err) : console.log(`updated data written succesully`);
-  });
+  fs.writeFile("./db/db.json", JSON.stringify(noteData, null, 4), (err) =>
+    err ? console.log(err) : res.json("Deleted!")
+  );
 
-  res.json("Deleted");
+  // const index = noteData.findIndex((note) => note.id === id);
+  // noteData.splice(index, 1);
 
-  // delete note from db
-  fs.readFile("./db/db.json", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      const parsedData = JSON.parse(data);
-      // filter notes that don't match the :id param passed in
-      const updatedNotes = parsedData.filter((note) => {
-        return note.id != id;
-      });
-      fs.writeFile(
-        "./db/db.json",
-        JSON.stringify(updatedNotes, null, 4),
-        (err) => {
-          err ? console.log(err) : console.log(`data deleted succesully`);
-        }
-      );
-    }
-  });
+  // // write the updated notes data to the db
+  // fs.writeFile("./db/db.json", JSON.stringify(noteData, null, 4), (err) => {
+  //   err ? console.log(err) : console.log(`updated data written succesully`);
+  // });
+
+  // res.json("Deleted");
+
+  // // delete note from db
+  // fs.readFile("./db/db.json", "utf8", (err, data) => {
+  //   if (err) {
+  //     console.error(err);
+  //   } else {
+  //     const parsedData = JSON.parse(data);
+  //     // filter notes that don't match the :id param passed in
+  //     const updatedNotes = parsedData.filter((note) => {
+  //       return note.id != id;
+  //     });
+  //     fs.writeFile(
+  //       "./db/db.json",
+  //       JSON.stringify(updatedNotes, null, 4),
+  //       (err) => {
+  //         err ? console.log(err) : console.log(`data deleted succesully`);
+  //       }
+  //     );
+  //   }
+  // });
 });
 
 // set up port
