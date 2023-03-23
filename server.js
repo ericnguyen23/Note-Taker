@@ -36,9 +36,28 @@ app.get("/api/notes", (req, res) => {
 });
 
 app.post("/api/notes", (req, res) => {
-  res.json(`${req.method} was recieved`);
-  console.info(req.rawHeaders);
-  console.info(`${req.method} request received`);
+  const { title, text } = req.body;
+
+  const newNote = {
+    title: title,
+    text: text,
+  };
+
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      const parsedData = JSON.parse(data);
+      parsedData.push(newNote);
+      fs.writeFile("./db/db.json", JSON.stringify(parsedData, null, 4), (err) =>
+        err ? console.log(err) : console.log(`data written succesully`)
+      );
+    }
+  });
+
+  // res.json(`${req.method} was recieved`);
+  // console.info(req.rawHeaders);
+  // console.info(`${req.method} request received`);
 });
 
 // set up port
