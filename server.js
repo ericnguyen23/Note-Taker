@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const noteData = require("./db/db.json");
+let noteData = require("./db/db.json");
 const fs = require("fs");
 const generateUniqueId = require("generate-unique-id");
 
@@ -28,12 +28,12 @@ app.get("/api/notes", (req, res) => {
 
 // api post route
 app.post("/api/notes", (req, res) => {
-  const { title, text, note_id } = req.body;
+  const { title, text, id } = req.body;
 
   const newNote = {
     title: title,
     text: text,
-    note_id: generateUniqueId(),
+    id: generateUniqueId(),
   };
 
   // add note the the front end
@@ -56,18 +56,20 @@ app.post("/api/notes", (req, res) => {
 
 // delete route
 app.delete("/api/notes/:id", (req, res) => {
-  const { note_id } = req.body;
+  const { id } = req.body;
 
-  // delete note from the front end
-  const index = noteData.findIndex((note) => note.note_id === note_id);
+  // // delete note from the front end
+  // noteData.filter((note) => note.id != id);
+
+  const index = noteData.findIndex((note) => note.id === id);
   noteData.splice(index, 1);
-
-  res.json("Deleted");
 
   // write the updated notes data to the db
   fs.writeFile("./db/db.json", JSON.stringify(noteData, null, 4), (err) => {
     err ? console.log(err) : console.log(`updated data written succesully`);
   });
+
+  res.json("Deleted");
 
   // delete note from db
   fs.readFile("./db/db.json", "utf8", (err, data) => {
@@ -77,7 +79,7 @@ app.delete("/api/notes/:id", (req, res) => {
       const parsedData = JSON.parse(data);
       // filter notes that don't match the :id param passed in
       const updatedNotes = parsedData.filter((note) => {
-        return note.note_id != note_id;
+        return note.id != id;
       });
       fs.writeFile(
         "./db/db.json",
