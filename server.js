@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const noteData = require("./db/db.json");
 const fs = require("fs");
+const generateUniqueId = require("generate-unique-id");
 
 const app = express();
 
@@ -34,11 +35,12 @@ app.get("/api/notes", (req, res) => {
 
 // api post route
 app.post("/api/notes", (req, res) => {
-  const { title, text } = req.body;
+  const { title, text, note_id } = req.body;
 
   const newNote = {
     title: title,
     text: text,
+    note_id: generateUniqueId(),
   };
 
   fs.readFile("./db/db.json", "utf8", (err, data) => {
